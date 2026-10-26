@@ -1,0 +1,12 @@
+{
+  "name": "sensei",
+  "owner": { "name": "P1a6" },
+  "plugins": [
+    {
+      "name": "sensei",
+      "source": "./",
+      "description": "Teaching mode for vibe coding: learn while building, gated by research, interview, and fill-in-the-blanks.",
+      "version": "1.0.0"
+    }
+  ]
+}

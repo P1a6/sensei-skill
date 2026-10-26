@@ -1,0 +1,8 @@
+{
+  "name": "sensei",
+  "description": "Teaching mode for vibe coding: builds a small feature with key parts missing, then gates your understanding through research, interview, and fill-in-the-blanks.",
+  "version": "1.0.0",
+  "author": { "name": "P1a6" },
+  "license": "MIT",
+  "keywords": ["teaching", "learning", "education", "vibe-coding"]
+}
