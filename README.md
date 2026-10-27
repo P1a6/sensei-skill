@@ -20,28 +20,35 @@ git clone https://github.com/P1a6/sensei-skill
 cp -r sensei-skill/skills/sensei ~/.claude/skills/sensei
 ```
 
+## Learn anything, anywhere
+
+Sensei works for any subject (coding, languages, music theory, statistics...) and in two places:
+
+- **Claude Code**: progress is saved in files on your machine.
+- **Normal chat (claude.ai / desktop)**: upload the skill (Settings > Capabilities > Skills, zip of the `skills/sensei` folder). Progress is saved in a **Sensei card**: a short text block Sensei prints after setup and after each lesson. Save it, and paste it at the start of your next chat.
+
+## How a lesson works
+
+1. **Story intro**: a few lines placing the lesson in the bigger picture (`Domain > Section > Topic > lesson`), with one small analogy.
+2. **Stage 1, research**: you get 3-5 concepts to look up alone. Sensei won't explain them. Say `done` when ready.
+3. **Stage 2, interview**: 5 questions (easy to hard), each with 2-3 sub-questions. Passing needs 60% weighted and a decent score on the hard one.
+4. **Stage 3, fill in the blanks**: you write the key parts Sensei left out, then answer 2 questions about the rest.
+
 ## First run: setup
 
-The first time you run `/sensei`, it walks you through a short setup (5 questions at most, defaults available):
+The first time you run `/sensei`, it walks you through a short setup (5 questions at most, defaults available): your subject and goal, scope, starting point (ground zero or self-assessed with placement checks), pace, and skip strictness.
 
-1. Your goal (e.g. junior web dev, backend, mobile, a specific project)
-2. The stack you want to learn
-3. Your starting point: ground zero, or self-assessed with a placement check
-4. Your pace
-5. Skip strictness
+It then builds **your own curriculum** (from the bundled template for coding, generated from scratch for other subjects) and creates your profile. Nothing is shared between users: the repo contains only the generic template.
 
-It then builds **your own curriculum** from the bundled template and creates your profile. Nothing is shared between users: the repo contains only the generic template.
+Words you type inside a session: `done` (end Stage 1), `skip` (skip a stage, once per day), `reveal` (show the answer), `sensei setup`, `sensei reset`, `sensei new track`, `sensei track <name>`, `sensei tracks`, `sensei card` (chat).
 
-Re-run any time with `sensei setup` (change goal/stack, keep progress) or `sensei reset` (wipe your progress, after confirmation).
+## What it stores (on your machine only, Claude Code)
 
-## What it stores (on your machine only)
+- `~/.claude/sensei/config.md`: global settings
+- `~/.claude/sensei/tracks/<subject>/`: config, curriculum and profile for each subject you learn
+- `.sensei/state.md` in a project: state of the current lesson
 
-- `~/.claude/sensei/config.md`: your goal and settings
-- `~/.claude/sensei/curriculum.md`: your personal curriculum
-- `~/.claude/sensei/profile.md`: your cross-project progress
-- `.sensei/state.md` in a project: state of the current task
-
-All are created during setup or on first use. Add `.sensei/` to your project's `.gitignore` if you don't want it committed.
+Add `.sensei/` to your project's `.gitignore` if you don't want it committed.
 
 ## License
 
