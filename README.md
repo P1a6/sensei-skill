@@ -33,6 +33,7 @@ Sensei works for any subject (coding, languages, music theory, statistics...) an
 2. **Stage 1, research**: you get 3-5 concepts to look up alone. Sensei won't explain them. Say `done` when ready.
 3. **Stage 2, interview**: 5 questions (easy to hard), each with 2-3 sub-questions. Passing needs 60% weighted and a decent score on the hard one.
 4. **Stage 3, fill in the blanks**: you write the key parts Sensei left out, then answer 2 questions about the rest.
+5. **Feedback**: after each lesson you get a report: scores per question, what you learned, what went well, what to work on, your trend over recent lessons, and the next step. It's saved as a note per lesson. Say `sensei review` any time for the picture across all sessions.
 
 ## First run: setup
 
@@ -40,12 +41,12 @@ The first time you run `/sensei`, it walks you through a short setup (5 question
 
 It then builds **your own curriculum** (from the bundled template for coding, generated from scratch for other subjects) and creates your profile. Nothing is shared between users: the repo contains only the generic template.
 
-Words you type inside a session: `done` (end Stage 1), `skip` (skip a stage, once per day), `reveal` (show the answer), `sensei setup`, `sensei reset`, `sensei new track`, `sensei track <name>`, `sensei tracks`, `sensei card` (chat).
+Words you type inside a session: `done` (end Stage 1), `skip` (skip a stage, once per day), `reveal` (show the answer), `sensei setup`, `sensei reset`, `sensei new track`, `sensei track <name>`, `sensei tracks`, `sensei review`, `sensei card` (chat).
 
 ## What it stores (on your machine only, Claude Code)
 
 - `~/.claude/sensei/config.md`: small pointer file with global settings and `data_dir`
-- `<data_dir>/tracks/<subject>/`: config, curriculum, profile and lesson log for each subject you learn
+- `<data_dir>/tracks/<subject>/`: config, curriculum, profile, lesson log and a feedback note per lesson (`sessions/`) for each subject you learn
 - `<data_dir>/Sensei.md`: home note with links and progress per track (Obsidian)
 
 `data_dir` defaults to `~/.claude/sensei`. Point it at a folder in an **Obsidian vault** during setup (or later with `sensei vault <path>`) and all your learning data become normal notes you can read, edit and graph, shared by every session. Sensei detects the vault (a `.obsidian` folder) and keeps the home note up to date.

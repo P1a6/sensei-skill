@@ -22,12 +22,13 @@ In this document "lesson" = a feature for coding topics, a worked example/exerci
 - `<data_dir>/tracks/<track>/config.md`: that track's goal, stack/scope, starting point, pace.
 - `<data_dir>/tracks/<track>/curriculum.md`: the track's ordered topics with prerequisites and section headings (chapters), made during setup.
 - `<data_dir>/tracks/<track>/profile.md`: the track's progress.
-- `<data_dir>/tracks/<track>/log.md`: one entry per finished lesson (date, lesson, score, 3-line recap).
+- `<data_dir>/tracks/<track>/log.md`: one line per finished lesson (date, lesson, score, link to its feedback note).
+- `<data_dir>/tracks/<track>/sessions/YYYY-MM-DD-<lesson-slug>.md`: the feedback report for that lesson (see "Lesson feedback").
 - `.sensei/state.md` in the current project (or working dir): state of the current lesson only. Stays local, not in `data_dir`.
 A **track** is one subject the user is learning (e.g. `web-dev`, `spanish`). The user can have many; switch with `sensei track <name>`.
 Read the config, active profile and any existing state at the start of every turn so you survive context loss.
 
-**Obsidian vault:** if `data_dir` is inside an Obsidian vault (it or a parent folder contains `.obsidian/`), every file above is a normal note in that vault. Then also keep `<data_dir>/Sensei.md` up to date as the home note: one line per track with wikilinks `[[tracks/<track>/curriculum]]`, `[[tracks/<track>/profile]]`, `[[tracks/<track>/log]]`, its goal, active/inactive, topics solid/total, and the next topic. Update it at setup and in every lesson close (Stage 3 step 5). Use wikilinks (not markdown links) for notes you create. Never touch notes outside `data_dir`, and never delete anything in the vault except on `sensei reset`.
+**Obsidian vault:** if `data_dir` is inside an Obsidian vault (it or a parent folder contains `.obsidian/`), every file above is a normal note in that vault. Then also keep `<data_dir>/Sensei.md` up to date as the home note: one line per track with wikilinks `[[tracks/<track>/curriculum]]`, `[[tracks/<track>/profile]]`, `[[tracks/<track>/log]]`, the latest feedback note, its goal, active/inactive, topics solid/total, and the next topic. Update it at setup and in every lesson close (Stage 3 step 5). Use wikilinks (not markdown links) for notes you create. Never touch notes outside `data_dir`, and never delete anything in the vault except on `sensei reset`.
 
 **First run:** if `~/.claude/sensei/config.md` or the active track's `profile.md`/`curriculum.md` is missing, read `references/setup.md` and run it before anything else. Also run it on `sensei setup`, `sensei reset`, `sensei new track`. `sensei vault <path>` changes `data_dir` (see setup.md).
 
@@ -141,7 +142,24 @@ Rules:
 2. Hints ladder, only when asked: (1) words (an analogy is fine), (2) point to relevant lines/concept, (3) pseudocode. Never provide final code or answers unless the user types `reveal`.
 3. When a part passes, ask one "why did you..." question if the reasoning is not obvious.
 4. After all parts pass, ask **2 questions about the material you provided** (the parts you wrote, not theirs): e.g. "trace what happens when X reaches line N", "why is this structured this way", "what input would break this and why?". Each may have 2-3 sub-questions. Use the key-then-judge process and 0-10 scoring from Stage 2. These count toward the task score and update concept levels.
-5. Close: run the whole lesson once, give a 3-line recap of what the user now knows, plus the one-line map trail for the section. Update the profile (topic level: set `solid` only if the task passed without `reveal` and Stage 3 scored >= 70%; otherwise `shaky`), append the task line, append the lesson entry to `log.md`, update `Sensei.md` if in a vault, and say which curriculum topic is next. In chat mode, print the updated Sensei card.
+5. Close: run the whole lesson once, give a 3-line recap of what the user now knows, plus the one-line map trail for the section. Update the profile (topic level: set `solid` only if the task passed without `reveal` and Stage 3 scored >= 70%; otherwise `shaky`), append the task line, say which curriculum topic is next, then write the **lesson feedback** below. In file mode also add the log line, save the feedback note, and update `Sensei.md` if in a vault. In chat mode, print the feedback and the updated Sensei card.
+
+## Lesson feedback (at every lesson close)
+
+Track facts as they happen, in `.sensei/state.md`: per-question scores with the one-line reasons, attempts per part, hints used (ladder level), `reveal`/`skip` uses, retries, concepts leaked or swapped. Then write the feedback from those facts, not from memory or mood.
+
+Show the user a short version in chat (max ~15 lines) and, in file mode, save the full version as `sessions/YYYY-MM-DD-<lesson-slug>.md` (frontmatter: `date`, `track`, `topic`, `lesson`, `score`, `result`; link the topic and the previous session with wikilinks when in a vault). Contents:
+
+1. **Result:** Stage 2 weighted total /90 with pass/fail, Stage 3 parts passed first try / with hints / revealed, Stage 3 questions /20, overall %. A small score table per question.
+2. **What you learned:** the concepts that moved up (new -> shaky -> solid), each in a few plain words of what you can now do, not a label.
+3. **What went well:** one or two specifics, evidence from the answers (a line you traced correctly, a "why" that was right).
+4. **What to work on:** the weakest concepts and the exact mistake pattern (e.g. "named the label but not the value"), with the next review date from spaced repetition.
+5. **Trend:** compare with the last 3 lessons on this track (score and hint/reveal counts): up, flat or down, in one sentence.
+6. **Next step:** the next topic and one concrete thing to do before it (re-read X, redo Q4 in your own words).
+
+Honest and specific, no padding: if the session was weak, say so plainly and kindly. An analogy is allowed once. Never include the answer keys of questions that will be reused in a retry before the retry is done.
+
+**`sensei review`:** on request, read `log.md` and the last ~10 session notes and show: score trend table, topics solid/shaky/new per section (the map trail), concepts due for review, recurring mistake patterns, and a suggestion for what to study next. Keep it to one screen.
 
 ## Rules
 

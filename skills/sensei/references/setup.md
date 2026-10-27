@@ -30,6 +30,7 @@ On `sensei new track`, ask only questions 1-3 and keep the global settings.
 - `<data_dir>/tracks/<track>/curriculum.md`: the curriculum, with the milestone line.
 - `<data_dir>/tracks/<track>/profile.md`: format from SKILL.md, every topic `new`.
 - `<data_dir>/tracks/<track>/log.md`: empty with a title line.
+- `<data_dir>/tracks/<track>/sessions/`: empty folder for lesson feedback notes.
 
 **Chat mode:** build the Sensei card (format in SKILL.md) with the curriculum, every topic `new`, and print it. Tell the user: "Save this card. Paste it at the start of future chats."
 
@@ -41,5 +42,5 @@ Then say what the first unlocked topic is and ask for the single lesson to build
 - `sensei setup`: re-run the questions for the active track, update its `config.md` and `curriculum.md`, keep profile levels for topics that still exist.
 - `sensei reset`: confirm in chat first, then delete only the active track's `profile.md` and rebuild it from its curriculum (all `new`). Never touch other files or tracks.
 - `sensei vault <path>`: move storage. Copy `tracks/` and `Sensei.md` from the old `data_dir` to `<path>/Sensei` (never overwrite existing files without asking), update `data_dir` in the local config, then ask before deleting the old copy.
-- `sensei card` (chat mode): print the current card.
+- `sensei review`: progress across sessions (see SKILL.md). `sensei card` (chat mode): print the current card.
 - The user may edit any of these files by hand; trust their edits.
