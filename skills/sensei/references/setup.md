@@ -2,7 +2,7 @@
 
 Run this when the global config / active track is missing (file mode), when the user has no Sensei card (chat mode), or on `sensei setup`, `sensei reset`, `sensei new track`. Nothing from the skill's repo is personal: every user's tracks, profile and curriculum are created here, for them only.
 
-Keep it short: at most 5 questions, one per message, each with a sensible default the user can accept with "default".
+Keep it short: at most 6 questions, one per message, each with a sensible default the user can accept with "default".
 
 ## Questions
 
@@ -11,6 +11,7 @@ Keep it short: at most 5 questions, one per message, each with a sensible defaul
 3. **Starting point.** (a) *ground zero* (default): every topic starts `new`, nothing moves up without passing Stage 2/3; (b) *self-assessed*: the user lists topics they believe they know, and each gets a short placement check (3 questions) before being set above `new`. Never accept claims without a check.
 4. **Pace.** Sessions per week and rough minutes per session. Only used to suggest how many topics to plan; not enforced.
 5. **Strictness.** Keep `skip` once per day (default) or change the limit.
+6. **Storage (file mode only; ask first on a fresh install, as question 1).** "Where should your learning data live? Default `~/.claude/sensei`, or give the path of an Obsidian vault folder." If a vault path is given, use `<path>/Sensei` as `data_dir`; if the path has no `.obsidian/` in it or in a parent, say so and ask whether to continue anyway. Create the folder.
 
 On `sensei new track`, ask only questions 1-3 and keep the global settings.
 
@@ -22,11 +23,13 @@ On `sensei new track`, ask only questions 1-3 and keep the global settings.
 
 ## Create files
 
-**File mode** (under `~/.claude/sensei/`, create dirs if missing; `<track>` is a short slug of the subject):
-- `config.md` (global; create only if missing): `skip_limit`, `last_skip: never`, `active_track`, `tracks:` list, created date.
-- `tracks/<track>/config.md`: goal, scope, starting point, pace, created date.
-- `tracks/<track>/curriculum.md`: the curriculum, with the milestone line.
-- `tracks/<track>/profile.md`: format from SKILL.md, every topic `new`.
+**File mode** (`~/.claude/sensei/config.md` is the local pointer; everything else goes under `<data_dir>`, create dirs if missing; `<track>` is a short slug of the subject):
+- `~/.claude/sensei/config.md` (create only if missing): `data_dir`, `skip_limit`, `last_skip: never`, `active_track`, `tracks:` list, created date.
+- `<data_dir>/Sensei.md` if in an Obsidian vault (format in SKILL.md).
+- `<data_dir>/tracks/<track>/config.md`: goal, scope, starting point, pace, created date.
+- `<data_dir>/tracks/<track>/curriculum.md`: the curriculum, with the milestone line.
+- `<data_dir>/tracks/<track>/profile.md`: format from SKILL.md, every topic `new`.
+- `<data_dir>/tracks/<track>/log.md`: empty with a title line.
 
 **Chat mode:** build the Sensei card (format in SKILL.md) with the curriculum, every topic `new`, and print it. Tell the user: "Save this card. Paste it at the start of future chats."
 
@@ -37,5 +40,6 @@ Then say what the first unlocked topic is and ask for the single lesson to build
 - `sensei track <name>`: set `active_track` (file mode) or load that track's card (chat mode). `sensei tracks` lists them.
 - `sensei setup`: re-run the questions for the active track, update its `config.md` and `curriculum.md`, keep profile levels for topics that still exist.
 - `sensei reset`: confirm in chat first, then delete only the active track's `profile.md` and rebuild it from its curriculum (all `new`). Never touch other files or tracks.
+- `sensei vault <path>`: move storage. Copy `tracks/` and `Sensei.md` from the old `data_dir` to `<path>/Sensei` (never overwrite existing files without asking), update `data_dir` in the local config, then ask before deleting the old copy.
 - `sensei card` (chat mode): print the current card.
 - The user may edit any of these files by hand; trust their edits.

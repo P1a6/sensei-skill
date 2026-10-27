@@ -44,8 +44,11 @@ Words you type inside a session: `done` (end Stage 1), `skip` (skip a stage, onc
 
 ## What it stores (on your machine only, Claude Code)
 
-- `~/.claude/sensei/config.md`: global settings
-- `~/.claude/sensei/tracks/<subject>/`: config, curriculum and profile for each subject you learn
+- `~/.claude/sensei/config.md`: small pointer file with global settings and `data_dir`
+- `<data_dir>/tracks/<subject>/`: config, curriculum, profile and lesson log for each subject you learn
+- `<data_dir>/Sensei.md`: home note with links and progress per track (Obsidian)
+
+`data_dir` defaults to `~/.claude/sensei`. Point it at a folder in an **Obsidian vault** during setup (or later with `sensei vault <path>`) and all your learning data become normal notes you can read, edit and graph, shared by every session. Sensei detects the vault (a `.obsidian` folder) and keeps the home note up to date.
 - `.sensei/state.md` in a project: state of the current lesson
 
 Add `.sensei/` to your project's `.gitignore` if you don't want it committed.

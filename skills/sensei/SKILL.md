@@ -18,15 +18,18 @@ In this document "lesson" = a feature for coding topics, a worked example/exerci
 ## Files (file mode)
 
 - `references/setup.md` and `references/curriculum-template.md` (in this skill's folder): first-run guide and master coding topic list. Shared, never edited per user.
-- `~/.claude/sensei/config.md`: global settings: skip limit, `last_skip`, `active_track`, list of tracks.
-- `~/.claude/sensei/tracks/<track>/config.md`: that track's goal, stack/scope, starting point, pace.
-- `~/.claude/sensei/tracks/<track>/curriculum.md`: the track's ordered topics with prerequisites and section headings (chapters), made during setup.
-- `~/.claude/sensei/tracks/<track>/profile.md`: the track's progress.
-- `.sensei/state.md` in the current project (or working dir): state of the current lesson only.
+- `~/.claude/sensei/config.md`: small local pointer + global settings: `data_dir` (where all learning data lives; default `~/.claude/sensei`), skip limit, `last_skip`, `active_track`, list of tracks.
+- `<data_dir>/tracks/<track>/config.md`: that track's goal, stack/scope, starting point, pace.
+- `<data_dir>/tracks/<track>/curriculum.md`: the track's ordered topics with prerequisites and section headings (chapters), made during setup.
+- `<data_dir>/tracks/<track>/profile.md`: the track's progress.
+- `<data_dir>/tracks/<track>/log.md`: one entry per finished lesson (date, lesson, score, 3-line recap).
+- `.sensei/state.md` in the current project (or working dir): state of the current lesson only. Stays local, not in `data_dir`.
 A **track** is one subject the user is learning (e.g. `web-dev`, `spanish`). The user can have many; switch with `sensei track <name>`.
 Read the config, active profile and any existing state at the start of every turn so you survive context loss.
 
-**First run:** if `~/.claude/sensei/config.md` or the active track's `profile.md`/`curriculum.md` is missing, read `references/setup.md` and run it before anything else. Also run it on `sensei setup`, `sensei reset`, `sensei new track`.
+**Obsidian vault:** if `data_dir` is inside an Obsidian vault (it or a parent folder contains `.obsidian/`), every file above is a normal note in that vault. Then also keep `<data_dir>/Sensei.md` up to date as the home note: one line per track with wikilinks `[[tracks/<track>/curriculum]]`, `[[tracks/<track>/profile]]`, `[[tracks/<track>/log]]`, its goal, active/inactive, topics solid/total, and the next topic. Update it at setup and in every lesson close (Stage 3 step 5). Use wikilinks (not markdown links) for notes you create. Never touch notes outside `data_dir`, and never delete anything in the vault except on `sensei reset`.
+
+**First run:** if `~/.claude/sensei/config.md` or the active track's `profile.md`/`curriculum.md` is missing, read `references/setup.md` and run it before anything else. Also run it on `sensei setup`, `sensei reset`, `sensei new track`. `sensei vault <path>` changes `data_dir` (see setup.md).
 
 ## Persistence (profile format)
 
@@ -138,7 +141,7 @@ Rules:
 2. Hints ladder, only when asked: (1) words (an analogy is fine), (2) point to relevant lines/concept, (3) pseudocode. Never provide final code or answers unless the user types `reveal`.
 3. When a part passes, ask one "why did you..." question if the reasoning is not obvious.
 4. After all parts pass, ask **2 questions about the material you provided** (the parts you wrote, not theirs): e.g. "trace what happens when X reaches line N", "why is this structured this way", "what input would break this and why?". Each may have 2-3 sub-questions. Use the key-then-judge process and 0-10 scoring from Stage 2. These count toward the task score and update concept levels.
-5. Close: run the whole lesson once, give a 3-line recap of what the user now knows, plus the one-line map trail for the section. Update the profile (topic level: set `solid` only if the task passed without `reveal` and Stage 3 scored >= 70%; otherwise `shaky`), append the task line, and say which curriculum topic is next. In chat mode, print the updated Sensei card.
+5. Close: run the whole lesson once, give a 3-line recap of what the user now knows, plus the one-line map trail for the section. Update the profile (topic level: set `solid` only if the task passed without `reveal` and Stage 3 scored >= 70%; otherwise `shaky`), append the task line, append the lesson entry to `log.md`, update `Sensei.md` if in a vault, and say which curriculum topic is next. In chat mode, print the updated Sensei card.
 
 ## Rules
 
