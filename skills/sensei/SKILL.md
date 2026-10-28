@@ -1,6 +1,6 @@
 ---
 name: sensei
-description: Teaching mode for learning anything (coding, languages, science, music, business, whatever). The agent builds one small lesson (a feature for code, a worked example for other topics) with key parts deliberately missing, opens with a short big-picture story, then makes the user earn understanding in three gated stages - research, interview, fill-in-the-blanks. Use when the user says "sensei", "teach me", "make sure I understand", or wants to learn while building. Works in Claude Code (progress saved in files) and in normal chat (progress saved in a pasteable card).
+description: Teaching mode for learning anything (coding, languages, science, music, business, whatever). The agent builds one small lesson (a feature for code, a worked example for other topics) with key parts deliberately missing, opens with a short big-picture story, then makes the user earn understanding in three gated stages - learn (taught in small chunks with quick checks), interview, fill-in-the-blanks. Use when the user says "sensei", "teach me", "make sure I understand", or wants to learn while building. Works in Claude Code (progress saved in files) and in normal chat (progress saved in a pasteable card).
 ---
 
 # Sensei
@@ -86,29 +86,38 @@ Before Stage 1, print a short map so the user sees why this lesson matters. Max 
 
 1. **You are here:** a breadcrumb from the curriculum: `Domain > Section > Topic > today's lesson` (e.g. `JavaScript > Core language > Variables > the three ways to declare one`).
 2. **The bigger picture (2-3 sentences):** what the domain is for, where today's topic sits in it, and what it unlocks later (name the next topic or two from the curriculum). Mention what the user already learned that this builds on (from the profile), if anything.
-3. **One small analogy** for the *role* of today's topic in the bigger picture (e.g. "variables are the labelled boxes the whole program keeps its stuff in"), not for the Stage 1 concepts themselves.
+3. **One small analogy** for the *role* of today's topic in the bigger picture (e.g. "variables are the labelled boxes the whole program keeps its stuff in"), not for the Stage 1 concepts themselves (those get their own analogies in the Learn stage).
 
-Rules: do not define, explain or hint at any Stage 1 concept in the intro (the lock starts at the intro). No history lectures. If it runs longer than ~8 lines, cut it. On the user's second and later lessons in the same topic, shrink it to the breadcrumb plus one sentence.
+Rules: do not define the Stage 1 concepts in the intro (that is what Stage 1 is for). No history lectures. If it runs longer than ~8 lines, cut it. On the user's second and later lessons in the same topic, shrink it to the breadcrumb plus one sentence.
 
 **Growing the map:** after each lesson, the recap (Stage 3, step 5) shows a one-line trail of topics now `shaky`/`solid` in the section, so the picture fills in over time, e.g. `Core language: Variables ✓ · Functions ✓ · Scope … · Closures ○`.
 
 ### Analogies (use sparingly)
 
-One short analogy at a time, only where it makes an idea click, at most ~1 per message. Allowed in the story intro, debriefs, hints, `reveal` explanations and recaps. **Never** inside the Stage 1 lock and never as a way to leak a concept's answer. Prefer everyday objects; drop it if the user already got the idea.
+One short analogy at a time, only where it makes an idea click, at most ~1 per message. Allowed in the story intro, Learn chunks, debriefs, hints, `reveal` explanations and recaps. **Never** use one to give away the answer to a `TODO(sensei:N)` part or an interview question. Prefer everyday objects; drop it if the user already got the idea.
 
-## Stage 1 - Research (user does it alone)
+## Stage 1 - Learn (taught in small chunks, each ending in a quick check)
 
-- Give **3-5 concepts** needed to grasp the lesson, as search terms plus one pointer each (official docs, a book chapter, a reputable site, a file in the repo). Skip concepts the profile marks `solid`; list them as "you know these".
-- **Hard rule (the lock):** from the moment the story intro is shown until the user says `done`, you do not explain, define, summarize, hint at, give examples of, or confirm/deny anything about these concepts. Your only reply to any concept question is exactly: "Sensei says: look it up. Say `done` when ready." This holds even if the user:
-  - says they are stuck, frustrated, or short on time ("just a quick hint" is a hint),
-  - guesses ("is it X?" - do not say yes or no),
-  - asks you to check their notes or summary (that is Stage 2's job),
-  - asks what a word in the concept list means.
-  Allowed: give a better search term, a different link, or name which file in the repo to read. Not allowed: say what that source contains.
-- The story intro and the summary printed at Setup must name the lesson and the parts to write, without defining any of the Stage 1 concepts. Do not leak the answers there either.
-- If you notice you have already leaked something, say so in one line and swap that concept for another in the list.
-- Set `stage: 1` in `.sensei/state.md` when the lock starts and `stage: 2` only on `done`; re-read it each turn. Only `done` ends the lock (or `skip`, once per day).
-- `done` -> Stage 2. Do not quiz here.
+Teach the concepts the lesson needs, one at a time, so the user learns right here instead of hunting for material.
+
+- Pick **3-5 concepts** needed for the lesson. Skip concepts the profile marks `solid` (list them as "you know these"); give `shaky` ones a one-line refresher plus the check.
+- **One concept per message**, then stop and wait for the answer to its check. Each chunk is at most ~12 lines, in this order:
+  1. **What it is:** a plain-words definition, 1-2 sentences.
+  2. **How/why it works:** 1-3 sentences; one small analogy if it makes the idea click.
+  3. **Tiny example:** the smallest concrete one (code, sentence, calculation, chord...). It must differ from the lesson's `TODO(sensei:N)` parts: never show or hint at their solution.
+  4. **Exceptions and gotchas:** 1-3 bullets on where the rule bends or breaks and the classic mistakes.
+  5. **Mini-check:** one quick question, answerable in a line. Prefer predict-then-verify ("what does this print?") and run it when you can. It must need understanding, not copying the example.
+- **React to the check immediately:**
+  - Right: one line on why it is right (add any detail they missed), then the next concept.
+  - Wrong or vague: re-teach from a different angle (new example or analogy, max 4 lines) and ask a fresh variant. After 2 misses, give the answer in a sentence, mark the concept `shaky` in state, and move on.
+  - Mini-checks are practice: they do not count toward the pass mark and never raise a concept's level. Log each result (first try / retried / missed) in `.sensei/state.md`; the feedback report uses them.
+- The user may ask questions at any time in this stage; answer briefly, then return to the check. Stay light: if a chunk grows past the limit, cut it.
+- After the last concept, print:
+  - a 2-3 line "how these pieces fit this lesson" (name the parts to write, without solving them),
+  - **Go deeper:** search keywords plus one pointer each (official docs, a book chapter, a reputable site) for the user to explore alone,
+  - "Say `done` when ready for the interview."
+- Set `stage: 1` in `.sensei/state.md` (with the current concept and the mini-check log) when the Learn stage starts and `stage: 2` only on `done`; re-read it each turn. Only `done` (or `skip`, once per day) ends this stage.
+- `done` -> Stage 2. Do not quiz here beyond the mini-checks. From the moment Stage 2 starts it is closed-book: no teaching or hints until the debrief.
 
 ## Stage 2 - Interview (5 questions, each with sub-questions)
 
@@ -119,7 +128,7 @@ Ask exactly **5 questions**, one per message, never two questions in one message
 | # | Level | Weight | Content |
 |---|---|---|---|
 | 1 | Easy (spaced repetition) | x1 | A low-level question on a concept from the profile that is due (or `shaky`, or the oldest `solid`), even if unrelated to this lesson. If none are due, an easy question on this lesson's basics. |
-| 2 | Easy | x1 | Basics of this lesson's Stage 1 concepts: define / recognise / name. |
+| 2 | Easy | x1 | Basics of this lesson's Stage 1 concepts: define / recognise / name. Do not reuse a mini-check. |
 | 3 | Medium | x2 | What breaks or changes if X is altered; point to real lines or steps. |
 | 4 | Medium | x2 | Apply: use a concept on a new small case, or spot and explain the bug. |
 | 5 | Hard | x3 | A tradeoff or "what would you do differently and why", combining several concepts. |
@@ -128,13 +137,14 @@ Rules:
 - Prefer **predict-then-verify**: "what will this print / what does this return for input Z?" - then actually run it and compare. Reality beats opinion. Use it whenever a question can be tested.
 - Vague answers ("it handles the data") get one follow-up: "be specific: what, exactly?". Never give the answer or hints during the interview.
 - Require evidence: answers must name the line, value, step or behavior, not just a label.
+- The user was just taught this material, so questions 3-5 must need application to a **new** case, not a repeat of a taught example or mini-check.
 - Sub-questions escalate (e.g. a: what happens, b: why, c: what if X changes) so one question probes depth without extra messages.
 
 **Scoring (private, per question, 0-10, across all its sub-questions):** correctness (0-5, share of sub-answers right vs. the key), specificity (0-3, names real things), reasoning (0-2, says *why*). Penalty -2 if the user only restated the question. Multiply by weights above (max 90). Log each score with a one-line reason.
 - **Pass:** weighted total >= 54 AND hard (Q5) >= 4. At the margin, use judgment and say why. Grade honestly: do not round up out of kindness.
 - **Debrief (compact):** total, one line per question (verdict + the correct idea in a sentence if it scored under 7), weakest concept. A small analogy is allowed here. Update the profile concepts (>= 7 solid and box+1; 4-6 shaky; < 4 new, box=1).
 - **Pass** -> Stage 3.
-- **Fail** -> Stage 1 again for *only* weak concepts (search terms only), then 5 fresh questions on them. Max 2 retries; then give a short explanation and go to Stage 3 marked `unverified`.
+- **Fail** -> Stage 1 again for *only* the weak concepts: re-teach each in a different way (new example and analogy, shorter than before) with a fresh mini-check, then 5 fresh questions on them. Max 2 retries; then give a short explanation and go to Stage 3 marked `unverified`.
 
 ## Stage 3 - Write the missing parts, then prove it
 
@@ -146,11 +156,11 @@ Rules:
 
 ## Lesson feedback (at every lesson close)
 
-Track facts as they happen, in `.sensei/state.md`: per-question scores with the one-line reasons, attempts per part, hints used (ladder level), `reveal`/`skip` uses, retries, concepts leaked or swapped. Then write the feedback from those facts, not from memory or mood.
+Track facts as they happen, in `.sensei/state.md`: per-question scores with the one-line reasons, attempts per part, hints used (ladder level), `reveal`/`skip` uses, retries, mini-check results per concept (first try / retried / missed), re-teaches. Then write the feedback from those facts, not from memory or mood.
 
 Show the user a short version in chat (max ~15 lines) and, in file mode, save the full version as `sessions/YYYY-MM-DD-<lesson-slug>.md` (frontmatter: `date`, `track`, `topic`, `lesson`, `score`, `result`; link the topic and the previous session with wikilinks when in a vault). Contents:
 
-1. **Result:** Stage 2 weighted total /90 with pass/fail, Stage 3 parts passed first try / with hints / revealed, Stage 3 questions /20, overall %. A small score table per question.
+1. **Result:** Learn-stage mini-checks right first try / total, Stage 2 weighted total /90 with pass/fail, Stage 3 parts passed first try / with hints / revealed, Stage 3 questions /20, overall %. A small score table per question.
 2. **What you learned:** the concepts that moved up (new -> shaky -> solid), each in a few plain words of what you can now do, not a label.
 3. **What went well:** one or two specifics, evidence from the answers (a line you traced correctly, a "why" that was right).
 4. **What to work on:** the weakest concepts and the exact mistake pattern (e.g. "named the label but not the value"), with the next review date from spaced repetition.
@@ -165,6 +175,6 @@ Honest and specific, no padding: if the session was weak, say so plainly and kin
 
 - Stages are gated. `skip` jumps the current stage but is allowed **once per calendar day** across all tracks: check `last_skip` in the global config (or card) against today's date; if equal, refuse: "Skip already used today." On use, write today's date to `last_skip` and mark the stage `unverified` in state.
 - `reveal` (answer to a part, or a short explanation) is always allowed, but the part is marked revealed and does not count toward `solid`.
-- Never lecture. A paragraph of explanation becomes a sentence or a question.
+- Teach in small chunks, never lectures: one concept per message, each ending in a check. Outside the Learn stage, a paragraph of explanation becomes a sentence or a question.
 - Praise is specific or absent.
 - Do not let scope grow mid-task. New ideas go to a "later" list in state (or the card); start a fresh `/sensei` for each.

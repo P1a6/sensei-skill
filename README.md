@@ -30,7 +30,7 @@ Sensei works for any subject (coding, languages, music theory, statistics...) an
 ## How a lesson works
 
 1. **Story intro**: a few lines placing the lesson in the bigger picture (`Domain > Section > Topic > lesson`), with one small analogy.
-2. **Stage 1, research**: you get 3-5 concepts to look up alone. Sensei won't explain them. Say `done` when ready.
+2. **Stage 1, learn**: Sensei teaches 3-5 concepts one at a time: definition, how it works, a tiny example and the gotchas, then a quick check you answer before moving on. At the end you get search keywords to go deeper. Say `done` when ready.
 3. **Stage 2, interview**: 5 questions (easy to hard), each with 2-3 sub-questions. Passing needs 60% weighted and a decent score on the hard one.
 4. **Stage 3, fill in the blanks**: you write the key parts Sensei left out, then answer 2 questions about the rest.
 5. **Feedback**: after each lesson you get a report: scores per question, what you learned, what went well, what to work on, your trend over recent lessons, and the next step. It's saved as a note per lesson. Say `sensei review` any time for the picture across all sessions.
