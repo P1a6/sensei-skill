@@ -1,6 +1,6 @@
 # Sensei
 
-A Claude Code skill that teaches while it builds. Instead of handing you finished code, Sensei builds one small feature with key parts deliberately missing, then gates your understanding in three stages: **research**, **interview**, **fill-in-the-blanks**. The goal state is junior-developer knowledge.
+A Claude Code skill that teaches while it builds. Instead of handing you finished code, Sensei builds one small feature with key parts deliberately missing, then gates your understanding in three stages: **learn**, **interview**, **fill-in-the-blanks**. The goal state is junior-developer knowledge.
 
 Trigger it by saying "sensei", "teach me", or "make sure I understand".
 
