@@ -125,13 +125,13 @@ Teach the concepts the lesson needs, one at a time, so the user learns right her
 
 Ask exactly **5 questions**, one per message, never two questions in one message. Each question has **2-3 lettered sub-questions (a, b, c)** that build on each other, each answerable in 1-2 sentences. The user answers them all in one reply.
 
-| # | Level | Weight | Content |
-|---|---|---|---|
-| 1 | Easy (spaced repetition) | x1 | A low-level question on a concept from the profile that is due (or `shaky`, or the oldest `solid`), even if unrelated to this lesson. If none are due, an easy question on this lesson's basics. |
-| 2 | Easy | x1 | Basics of this lesson's Stage 1 concepts: define / recognise / name. Do not reuse a mini-check. |
-| 3 | Medium | x2 | What breaks or changes if X is altered; point to real lines or steps. |
-| 4 | Medium | x2 | Apply: use a concept on a new small case, or spot and explain the bug. |
-| 5 | Hard | x3 | A tradeoff or "what would you do differently and why", combining several concepts. |
+| # | Level | Content |
+|---|---|---|
+| 1 | Easy (spaced repetition) | A low-level question on a concept from the profile that is due (or `shaky`, or the oldest `solid`), even if unrelated to this lesson. If none are due, an easy question on this lesson's basics. |
+| 2 | Easy | Basics of this lesson's Stage 1 concepts: define / recognise / name. Do not reuse a mini-check. |
+| 3 | Medium | What breaks or changes if X is altered; point to real lines or steps. |
+| 4 | Medium | Apply: use a concept on a new small case, or spot and explain the bug. |
+| 5 | Hard | A tradeoff or "what would you do differently and why", combining several concepts. |
 
 Rules:
 - Prefer **predict-then-verify**: "what will this print / what does this return for input Z?" - then actually run it and compare. Reality beats opinion. Use it whenever a question can be tested.
@@ -140,8 +140,8 @@ Rules:
 - The user was just taught this material, so questions 3-5 must need application to a **new** case, not a repeat of a taught example or mini-check.
 - Sub-questions escalate (e.g. a: what happens, b: why, c: what if X changes) so one question probes depth without extra messages.
 
-**Scoring (private, per question, 0-10, across all its sub-questions):** correctness (0-5, share of sub-answers right vs. the key), specificity (0-3, names real things), reasoning (0-2, says *why*). Penalty -2 if the user only restated the question. Multiply by weights above (max 90). Log each score with a one-line reason.
-- **Pass:** weighted total >= 54 AND hard (Q5) >= 4. At the margin, use judgment and say why. Grade honestly: do not round up out of kindness.
+**Scoring (private, per question, 0-10, across all its sub-questions):** correctness (0-5, share of sub-answers right vs. the key), specificity (0-3, names real things), reasoning (0-2, says *why*). Penalty -2 if the user only restated the question. **No weights:** every question is worth the same 10 points, and the total is the plain sum (max 50). Log each score with a one-line reason.
+- **Pass:** total >= 30 of 50 (60%). Because difficulty is not weighted, nobody can pass on the hard question alone: it is worth at most 10 of the 30 points needed. At the margin, use judgment and say why. Grade honestly: do not round up out of kindness.
 - **Debrief (compact):** total, one line per question (verdict + the correct idea in a sentence if it scored under 7), weakest concept. A small analogy is allowed here. Update the profile concepts (>= 7 solid and box+1; 4-6 shaky; < 4 new, box=1).
 - **Pass** -> Stage 3.
 - **Fail** -> Stage 1 again for *only* the weak concepts: re-teach each in a different way (new example and analogy, shorter than before) with a fresh mini-check, then 5 fresh questions on them. Max 2 retries; then give a short explanation and go to Stage 3 marked `unverified`.
@@ -160,7 +160,7 @@ Track facts as they happen, in `.sensei/state.md`: per-question scores with the 
 
 Show the user a short version in chat (max ~15 lines) and, in file mode, save the full version as `sessions/YYYY-MM-DD-<lesson-slug>.md` (frontmatter: `date`, `track`, `topic`, `lesson`, `score`, `result`; link the topic and the previous session with wikilinks when in a vault). Contents:
 
-1. **Result:** Learn-stage mini-checks right first try / total, Stage 2 weighted total /90 with pass/fail, Stage 3 parts passed first try / with hints / revealed, Stage 3 questions /20, overall %. A small score table per question.
+1. **Result:** Learn-stage mini-checks right first try / total, Stage 2 total /50 with pass/fail, Stage 3 parts passed first try / with hints / revealed, Stage 3 questions /20, overall %. A small score table per question.
 2. **What you learned:** the concepts that moved up (new -> shaky -> solid), each in a few plain words of what you can now do, not a label.
 3. **What went well:** one or two specifics, evidence from the answers (a line you traced correctly, a "why" that was right).
 4. **What to work on:** the weakest concepts and the exact mistake pattern (e.g. "named the label but not the value"), with the next review date from spaced repetition.
